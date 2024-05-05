@@ -4,8 +4,8 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 final ctrlText = TextEditingController();
 final ctrlKey = TextEditingController();
 
-var cipherText = 'empty text';
-var plainText = 'empty text';
+var cipherText = '';
+var plainText = '';
 var isShowClearText = false;
 var isShowClearKey = false;
 encrypt.Encrypted? encrypted;
@@ -25,6 +25,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool _isVisibleEnc = false;
+  bool _isVisibleDes = false;
+
   void encryptText(String text) {
     final plainText = text;
     encrypted = encrypter.encrypt(plainText, iv: iv);
@@ -47,8 +50,10 @@ class _MyAppState extends State<MyApp> {
     ctrlKey.clear();
     isShowClearText = false;
     isShowClearKey = false;
-    cipherText = 'empty text';
-    plainText = 'empty text';
+    _isVisibleEnc = false;
+    _isVisibleDes = false;
+    cipherText = '';
+    plainText = '';
     setState(() {});
   }
 
@@ -56,8 +61,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Material App',
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         extendBodyBehindAppBar: true,
+
         // appBar: AppBar(
         //   title: const Text('Cryptography Modern'),
         // ),
@@ -73,8 +80,12 @@ class _MyAppState extends State<MyApp> {
                   height: 100,
                   width: 100,
                 ),
-                const Center(child: Text('Encrypt & Decrypt')),
-                const SizedBox(height: 10),
+                const Center(
+                    child: Text(
+                  'Encrypt & Decrypt',
+                  textScaler: TextScaler.linear(2),
+                )),
+                const SizedBox(height: 30),
                 TextField(
                   controller: ctrlText,
                   decoration: InputDecoration(
@@ -101,6 +112,7 @@ class _MyAppState extends State<MyApp> {
                     } else {
                       setState(() {
                         isShowClearText = true;
+                        _isVisibleEnc = false;
                       });
                     }
                     setState(() {});
@@ -134,6 +146,7 @@ class _MyAppState extends State<MyApp> {
                     } else {
                       setState(() {
                         isShowClearKey = true;
+                        _isVisibleEnc = false;
                       });
                     }
                     key = encrypt.Key.fromUtf8(value);
@@ -149,30 +162,56 @@ class _MyAppState extends State<MyApp> {
                   onPressed: (ctrlText.text.isNotEmpty) && (ctrlKey.text.length == 32)
                       ? () {
                           encryptText(ctrlText.text);
+                          _isVisibleEnc = true;
                         }
                       : null,
                   child: const Text('Encrypt'),
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  'cipher text: $cipherText',
-                  textScaler: const TextScaler.linear(2),
+                const SizedBox(height: 10),
+                Visibility(
+                  visible: _isVisibleEnc,
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        cipherText,
+                        textScaler: const TextScaler.linear(1.2),
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 OutlinedButton(
                   onPressed: () {
                     decryptText();
+                    _isVisibleDes = true;
                   },
                   child: const Text(
                     "Decrypt",
                   ),
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  'plain text: $plainText',
-                  textScaler: const TextScaler.linear(2),
+                const SizedBox(height: 10),
+                Visibility(
+                  visible: _isVisibleDes,
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple[50],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        plainText,
+                        textScaler: const TextScaler.linear(1.5),
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Column(
                   children: [
                     OutlinedButton(
