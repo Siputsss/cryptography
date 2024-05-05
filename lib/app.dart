@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'data.dart';
+import 'about.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -41,18 +42,27 @@ class _AppState extends State<App> {
     return MaterialApp(
       title: 'Material App',
       debugShowCheckedModeBanner: false,
+      // theme: ThemeData.dark(),
       home: Scaffold(
-        extendBodyBehindAppBar: true,
-
-        // appBar: AppBar(
-        //   title: const Text('Cryptography Modern'),
-        // ),
+        appBar: AppBar(
+          actions: [
+            Builder(builder: (context) {
+              return IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const About()),
+                    );
+                  },
+                  icon: const Icon(Icons.info));
+            })
+          ],
+        ),
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Image.asset(
                   'assets/images/enkripsi.png',
@@ -62,6 +72,7 @@ class _AppState extends State<App> {
                 const Center(
                     child: Text(
                   'Encrypt & Decrypt',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                   textScaler: TextScaler.linear(2),
                 )),
                 const SizedBox(height: 30),
@@ -71,6 +82,7 @@ class _AppState extends State<App> {
                     border: const OutlineInputBorder(),
                     labelText: 'Text',
                     hintText: 'Input Text',
+                    prefixIcon: const Icon(Icons.text_snippet),
                     suffixIcon: isShowClearText
                         ? IconButton(
                             onPressed: () {
@@ -105,6 +117,7 @@ class _AppState extends State<App> {
                     border: const OutlineInputBorder(),
                     labelText: 'Secret Key',
                     hintText: 'Input secret key',
+                    prefixIcon: const Icon(Icons.key),
                     suffixIcon: isShowClearKey
                         ? IconButton(
                             onPressed: () {
@@ -133,14 +146,24 @@ class _AppState extends State<App> {
                   },
                 ),
                 const SizedBox(height: 20),
-                OutlinedButton(
-                  onPressed: (ctrlText.text.isNotEmpty) && (ctrlKey.text.length == 32)
-                      ? () {
-                          encryptText(ctrlText.text);
-                          isVisibleEnc = true;
-                        }
-                      : null,
-                  child: const Text('Encrypt'),
+                SizedBox(
+                  width: 200,
+                  child: OutlinedButton(
+                    onPressed: (ctrlText.text.isNotEmpty) && (ctrlKey.text.length == 32)
+                        ? () {
+                            encryptText(ctrlText.text);
+                            isVisibleEnc = true;
+                          }
+                        : null,
+                    style: OutlinedButton.styleFrom(
+                      disabledBackgroundColor: Colors.deepPurple[50],
+                      backgroundColor: Colors.deepPurple[200],
+                    ),
+                    child: const Text(
+                      'Encrypt',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Visibility(
@@ -160,13 +183,18 @@ class _AppState extends State<App> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                OutlinedButton(
-                  onPressed: () {
-                    decryptText();
-                    isVisibleDes = true;
-                  },
-                  child: const Text(
-                    "Decrypt",
+                SizedBox(
+                  width: 200,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      decryptText();
+                      isVisibleDes = true;
+                    },
+                    style: OutlinedButton.styleFrom(backgroundColor: Colors.deepPurple[200]),
+                    child: const Text(
+                      "Decrypt",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -181,7 +209,7 @@ class _AppState extends State<App> {
                     child: Center(
                       child: Text(
                         plainText,
-                        textScaler: const TextScaler.linear(1.5),
+                        textScaler: const TextScaler.linear(1.2),
                       ),
                     ),
                   ),
@@ -191,7 +219,9 @@ class _AppState extends State<App> {
                   children: [
                     OutlinedButton(
                       onPressed: clearAll,
-                      child: const Text('Clear All'),
+                      child: const Text(
+                        'Clear All',
+                      ),
                     ),
                   ],
                 ),

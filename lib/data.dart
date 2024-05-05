@@ -9,6 +9,7 @@ var isShowClearText = false;
 var isShowClearKey = false;
 bool isVisibleEnc = false;
 bool isVisibleDes = false;
+bool flag = false;
 encrypt.Encrypted? encrypted;
 
 //  final key = encrypt.Key.fromSecureRandom(32);
